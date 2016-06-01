@@ -1,34 +1,29 @@
 package io.swagger.client.model;
 
-import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gson.annotations.SerializedName;
+
 
 /**
  * AdditionalPropertiesClass
  */
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen", date = "2016-05-31T18:50:49.249+02:00")
 public class AdditionalPropertiesClass   {
   
+  @SerializedName("map_property")
   private Map<String, String> mapProperty = new HashMap<String, String>();
+
+  @SerializedName("map_of_map_property")
   private Map<String, Map<String, String>> mapOfMapProperty = new HashMap<String, Map<String, String>>();
 
-  
   /**
    **/
-  public AdditionalPropertiesClass mapProperty(Map<String, String> mapProperty) {
-    this.mapProperty = mapProperty;
-    return this;
-  }
-  
-  @ApiModelProperty(example = "null", value = "")
-  @JsonProperty("map_property")
+  @ApiModelProperty(value = "")
   public Map<String, String> getMapProperty() {
     return mapProperty;
   }
@@ -36,16 +31,9 @@ public class AdditionalPropertiesClass   {
     this.mapProperty = mapProperty;
   }
 
-
   /**
    **/
-  public AdditionalPropertiesClass mapOfMapProperty(Map<String, Map<String, String>> mapOfMapProperty) {
-    this.mapOfMapProperty = mapOfMapProperty;
-    return this;
-  }
-  
-  @ApiModelProperty(example = "null", value = "")
-  @JsonProperty("map_of_map_property")
+  @ApiModelProperty(value = "")
   public Map<String, Map<String, String>> getMapOfMapProperty() {
     return mapOfMapProperty;
   }
@@ -55,7 +43,7 @@ public class AdditionalPropertiesClass   {
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -87,7 +75,7 @@ public class AdditionalPropertiesClass   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

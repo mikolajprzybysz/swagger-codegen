@@ -1,38 +1,33 @@
 package io.swagger.client.model;
 
-import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
+import com.google.gson.annotations.SerializedName;
 
 
 /**
  * ReadOnlyFirst
  */
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen", date = "2016-05-31T18:50:49.249+02:00")
 public class ReadOnlyFirst   {
   
+  @SerializedName("bar")
   private String bar = null;
+
+  @SerializedName("baz")
   private String baz = null;
 
-  
-  @ApiModelProperty(example = "null", value = "")
-  @JsonProperty("bar")
+  /**
+   **/
+  @ApiModelProperty(value = "")
   public String getBar() {
     return bar;
   }
 
-
   /**
    **/
-  public ReadOnlyFirst baz(String baz) {
-    this.baz = baz;
-    return this;
-  }
-  
-  @ApiModelProperty(example = "null", value = "")
-  @JsonProperty("baz")
+  @ApiModelProperty(value = "")
   public String getBaz() {
     return baz;
   }
@@ -42,7 +37,7 @@ public class ReadOnlyFirst   {
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -74,7 +69,7 @@ public class ReadOnlyFirst   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

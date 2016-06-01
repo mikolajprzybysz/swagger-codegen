@@ -1,34 +1,31 @@
 package io.swagger.client.model;
 
-import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.annotations.SerializedName;
+
 
 /**
  * ArrayTest
  */
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen", date = "2016-05-31T18:50:49.249+02:00")
 public class ArrayTest   {
   
+  @SerializedName("array_of_string")
   private List<String> arrayOfString = new ArrayList<String>();
+
+  @SerializedName("array_array_of_integer")
   private List<List<Long>> arrayArrayOfInteger = new ArrayList<List<Long>>();
+
+  @SerializedName("array_array_of_model")
   private List<List<ReadOnlyFirst>> arrayArrayOfModel = new ArrayList<List<ReadOnlyFirst>>();
 
-  
   /**
    **/
-  public ArrayTest arrayOfString(List<String> arrayOfString) {
-    this.arrayOfString = arrayOfString;
-    return this;
-  }
-  
-  @ApiModelProperty(example = "null", value = "")
-  @JsonProperty("array_of_string")
+  @ApiModelProperty(value = "")
   public List<String> getArrayOfString() {
     return arrayOfString;
   }
@@ -36,16 +33,9 @@ public class ArrayTest   {
     this.arrayOfString = arrayOfString;
   }
 
-
   /**
    **/
-  public ArrayTest arrayArrayOfInteger(List<List<Long>> arrayArrayOfInteger) {
-    this.arrayArrayOfInteger = arrayArrayOfInteger;
-    return this;
-  }
-  
-  @ApiModelProperty(example = "null", value = "")
-  @JsonProperty("array_array_of_integer")
+  @ApiModelProperty(value = "")
   public List<List<Long>> getArrayArrayOfInteger() {
     return arrayArrayOfInteger;
   }
@@ -53,16 +43,9 @@ public class ArrayTest   {
     this.arrayArrayOfInteger = arrayArrayOfInteger;
   }
 
-
   /**
    **/
-  public ArrayTest arrayArrayOfModel(List<List<ReadOnlyFirst>> arrayArrayOfModel) {
-    this.arrayArrayOfModel = arrayArrayOfModel;
-    return this;
-  }
-  
-  @ApiModelProperty(example = "null", value = "")
-  @JsonProperty("array_array_of_model")
+  @ApiModelProperty(value = "")
   public List<List<ReadOnlyFirst>> getArrayArrayOfModel() {
     return arrayArrayOfModel;
   }
@@ -72,7 +55,7 @@ public class ArrayTest   {
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -106,7 +89,7 @@ public class ArrayTest   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

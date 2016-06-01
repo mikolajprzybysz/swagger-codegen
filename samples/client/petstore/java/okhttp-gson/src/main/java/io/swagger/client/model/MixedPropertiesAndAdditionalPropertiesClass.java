@@ -1,8 +1,6 @@
 package io.swagger.client.model;
 
-import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.client.model.Animal;
@@ -11,27 +9,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gson.annotations.SerializedName;
+
 
 /**
  * MixedPropertiesAndAdditionalPropertiesClass
  */
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen", date = "2016-05-31T18:50:49.249+02:00")
 public class MixedPropertiesAndAdditionalPropertiesClass   {
   
+  @SerializedName("uuid")
   private String uuid = null;
+
+  @SerializedName("dateTime")
   private Date dateTime = null;
+
+  @SerializedName("map")
   private Map<String, Animal> map = new HashMap<String, Animal>();
 
-  
   /**
    **/
-  public MixedPropertiesAndAdditionalPropertiesClass uuid(String uuid) {
-    this.uuid = uuid;
-    return this;
-  }
-  
-  @ApiModelProperty(example = "null", value = "")
-  @JsonProperty("uuid")
+  @ApiModelProperty(value = "")
   public String getUuid() {
     return uuid;
   }
@@ -39,16 +36,9 @@ public class MixedPropertiesAndAdditionalPropertiesClass   {
     this.uuid = uuid;
   }
 
-
   /**
    **/
-  public MixedPropertiesAndAdditionalPropertiesClass dateTime(Date dateTime) {
-    this.dateTime = dateTime;
-    return this;
-  }
-  
-  @ApiModelProperty(example = "null", value = "")
-  @JsonProperty("dateTime")
+  @ApiModelProperty(value = "")
   public Date getDateTime() {
     return dateTime;
   }
@@ -56,16 +46,9 @@ public class MixedPropertiesAndAdditionalPropertiesClass   {
     this.dateTime = dateTime;
   }
 
-
   /**
    **/
-  public MixedPropertiesAndAdditionalPropertiesClass map(Map<String, Animal> map) {
-    this.map = map;
-    return this;
-  }
-  
-  @ApiModelProperty(example = "null", value = "")
-  @JsonProperty("map")
+  @ApiModelProperty(value = "")
   public Map<String, Animal> getMap() {
     return map;
   }
@@ -75,7 +58,7 @@ public class MixedPropertiesAndAdditionalPropertiesClass   {
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -109,7 +92,7 @@ public class MixedPropertiesAndAdditionalPropertiesClass   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }
