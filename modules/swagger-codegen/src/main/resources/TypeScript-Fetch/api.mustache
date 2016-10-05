@@ -1,3 +1,4 @@
+{{>licenseInfo}}
 import * as querystring from "querystring";
 import * as url from "url";
 
@@ -9,7 +10,7 @@ import * as assign from "core-js/library/fn/object/assign";
 interface Dictionary<T> { [index: string]: T; }
 export interface FetchAPI { (url: string, init?: any): Promise<any>; }
 
-const BASE_PATH = "{{basePath}}";
+const BASE_PATH = "{{{basePath}}}".replace(/\/+$/, '');
 
 export interface FetchArgs {
     url: string;
@@ -40,14 +41,14 @@ export interface {{classname}} {{#parent}}extends {{{parent}}} {{/parent}}{
      * {{{description}}}
      */
 {{/description}}
-    "{{name}}"{{^required}}?{{/required}}: {{#isEnum}}{{classname}}{{{datatypeWithEnum}}}{{/isEnum}}{{^isEnum}}{{{datatype}}}{{/isEnum}};
+    "{{name}}"{{^required}}?{{/required}}: {{#isEnum}}{{{datatypeWithEnum}}}{{/isEnum}}{{^isEnum}}{{{datatype}}}{{/isEnum}};
 {{/vars}}
 }
 
 {{#hasEnums}}
 {{#vars}}
 {{#isEnum}}
-export type {{classname}}{{datatypeWithEnum}} = {{#allowableValues}}{{#values}}"{{.}}"{{^-last}} | {{/-last}}{{/values}}{{/allowableValues}};
+export type {{{enumName}}} = {{#allowableValues}}{{#values}}"{{{.}}}"{{^-last}} | {{/-last}}{{/values}}{{/allowableValues}};
 {{/isEnum}}
 {{/vars}}
 {{/hasEnums}}
@@ -160,7 +161,26 @@ export class {{classname}} extends BaseAPI {
         return {{classname}}Fp.{{nickname}}({{#hasParams}}params{{/hasParams}})(this.fetch, this.basePath);
     }
 {{/operation}}
-}
+};
+
+/**
+ * {{classname}} - factory interface{{#description}}
+ * {{&description}}{{/description}}
+ */
+export const {{classname}}Factory = function (fetch?: FetchAPI, basePath?: string) {
+    return {
+{{#operation}}
+        /** {{#summary}}
+         * {{summary}}{{/summary}}{{#notes}}
+         * {{notes}}{{/notes}}{{#allParams}}
+         * @param {{paramName}} {{description}}{{/allParams}}
+         */
+        {{nickname}}({{#hasParams}}params: { {{#allParams}} {{paramName}}{{^required}}?{{/required}}: {{{dataType}}};{{/allParams}} }{{/hasParams}}) {
+            return {{classname}}Fp.{{nickname}}({{#hasParams}}params{{/hasParams}})(fetch, basePath);
+        },
+{{/operation}}
+    }
+};
 
 {{/operations}}
 {{/apis}}

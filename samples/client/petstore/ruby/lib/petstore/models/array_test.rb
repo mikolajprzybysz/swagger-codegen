@@ -1,7 +1,7 @@
 =begin
-Swagger Petstore
+#Swagger Petstore
 
-This spec is mainly for testing Petstore server and contains fake endpoints, models. Please do not use this for any other purpose. Special characters: \" \\ 
+#This spec is mainly for testing Petstore server and contains fake endpoints, models. Please do not use this for any other purpose. Special characters: \" \\
 
 OpenAPI spec version: 1.0.0
 Contact: apiteam@swagger.io
@@ -26,15 +26,28 @@ require 'date'
 module Petstore
 
   class ArrayTest
+    attr_accessor :array_of_string
+
+    attr_accessor :array_array_of_integer
+
+    attr_accessor :array_array_of_model
+
+
     # Attribute mapping from ruby-style variable name to JSON key.
     def self.attribute_map
       {
+        :'array_of_string' => :'array_of_string',
+        :'array_array_of_integer' => :'array_array_of_integer',
+        :'array_array_of_model' => :'array_array_of_model'
       }
     end
 
     # Attribute type mapping.
     def self.swagger_types
       {
+        :'array_of_string' => :'Array<String>',
+        :'array_array_of_integer' => :'Array<Array<Integer>>',
+        :'array_array_of_model' => :'Array<Array<ReadOnlyFirst>>'
       }
     end
 
@@ -45,6 +58,24 @@ module Petstore
 
       # convert string to symbol for hash key
       attributes = attributes.each_with_object({}){|(k,v), h| h[k.to_sym] = v}
+
+      if attributes.has_key?(:'array_of_string')
+        if (value = attributes[:'array_of_string']).is_a?(Array)
+          self.array_of_string = value
+        end
+      end
+
+      if attributes.has_key?(:'array_array_of_integer')
+        if (value = attributes[:'array_array_of_integer']).is_a?(Array)
+          self.array_array_of_integer = value
+        end
+      end
+
+      if attributes.has_key?(:'array_array_of_model')
+        if (value = attributes[:'array_array_of_model']).is_a?(Array)
+          self.array_array_of_model = value
+        end
+      end
 
     end
 
@@ -58,13 +89,17 @@ module Petstore
     # Check to see if the all the properties in the model are valid
     # @return true if the model is valid
     def valid?
+      return true
     end
 
     # Checks equality by comparing each attribute.
     # @param [Object] Object to be compared
     def ==(o)
       return true if self.equal?(o)
-      self.class == o.class
+      self.class == o.class &&
+          array_of_string == o.array_of_string &&
+          array_array_of_integer == o.array_array_of_integer &&
+          array_array_of_model == o.array_array_of_model
     end
 
     # @see the `==` method
@@ -76,7 +111,7 @@ module Petstore
     # Calculates hash code according to all attributes.
     # @return [Fixnum] Hash code
     def hash
-      [].hash
+      [array_of_string, array_array_of_integer, array_array_of_model].hash
     end
 
     # Builds the object from hash
@@ -85,7 +120,7 @@ module Petstore
     def build_from_hash(attributes)
       return nil unless attributes.is_a?(Hash)
       self.class.swagger_types.each_pair do |key, type|
-        if type =~ /^Array<(.*)>/i
+        if type =~ /\AArray<(.*)>/i
           # check to ensure the input is an array given that the the attribute
           # is documented as an array but the input is not
           if attributes[self.class.attribute_map[key]].is_a?(Array)
@@ -116,7 +151,7 @@ module Petstore
       when :Float
         value.to_f
       when :BOOLEAN
-        if value.to_s =~ /^(true|t|yes|y|1)$/i
+        if value.to_s =~ /\A(true|t|yes|y|1)\z/i
           true
         else
           false
@@ -127,7 +162,7 @@ module Petstore
       when /\AArray<(?<inner_type>.+)>\z/
         inner_type = Regexp.last_match[:inner_type]
         value.map { |v| _deserialize(inner_type, v) }
-      when /\AHash<(?<k_type>.+), (?<v_type>.+)>\z/
+      when /\AHash<(?<k_type>.+?), (?<v_type>.+)>\z/
         k_type = Regexp.last_match[:k_type]
         v_type = Regexp.last_match[:v_type]
         {}.tap do |hash|

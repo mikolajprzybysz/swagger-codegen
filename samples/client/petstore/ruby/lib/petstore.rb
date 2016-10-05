@@ -1,7 +1,7 @@
 =begin
-Swagger Petstore
+#Swagger Petstore
 
-This spec is mainly for testing Petstore server and contains fake endpoints, models. Please do not use this for any other purpose. Special characters: \" \\ 
+#This spec is mainly for testing Petstore server and contains fake endpoints, models. Please do not use this for any other purpose. Special characters: \" \\
 
 OpenAPI spec version: 1.0.0
 Contact: apiteam@swagger.io
@@ -32,17 +32,25 @@ require 'petstore/models/additional_properties_class'
 require 'petstore/models/animal'
 require 'petstore/models/animal_farm'
 require 'petstore/models/api_response'
+require 'petstore/models/array_of_array_of_number_only'
+require 'petstore/models/array_of_number_only'
 require 'petstore/models/array_test'
 require 'petstore/models/cat'
 require 'petstore/models/category'
+require 'petstore/models/client'
 require 'petstore/models/dog'
+require 'petstore/models/enum_arrays'
 require 'petstore/models/enum_class'
 require 'petstore/models/enum_test'
 require 'petstore/models/format_test'
+require 'petstore/models/has_only_read_only'
+require 'petstore/models/list'
+require 'petstore/models/map_test'
 require 'petstore/models/mixed_properties_and_additional_properties_class'
 require 'petstore/models/model_200_response'
 require 'petstore/models/model_return'
 require 'petstore/models/name'
+require 'petstore/models/number_only'
 require 'petstore/models/order'
 require 'petstore/models/pet'
 require 'petstore/models/read_only_first'

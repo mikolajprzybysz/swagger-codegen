@@ -1,6 +1,7 @@
 package io.swagger.codegen.languages;
 
 import io.swagger.codegen.*;
+import io.swagger.models.ArrayModel;
 import io.swagger.models.Model;
 import io.swagger.models.properties.*;
 
@@ -23,7 +24,6 @@ public class ObjcClientCodegen extends DefaultCodegen implements CodegenConfig {
     public static final String GIT_REPO_URL = "gitRepoURL";
     public static final String DEFAULT_LICENSE = "Apache License, Version 2.0";
     public static final String CORE_DATA = "coreData";
-    public static final String BinaryDataType = "ObjcClientCodegenBinaryData";
     
     protected Set<String> foundationClasses = new HashSet<String>();
     protected String podName = "SwaggerClient";
@@ -70,8 +70,7 @@ public class ObjcClientCodegen extends DefaultCodegen implements CodegenConfig {
         defaultIncludes.add("NSMutableArray");
         defaultIncludes.add("NSMutableDictionary");
         defaultIncludes.add("NSManagedObject");
-
-        defaultIncludes.add(BinaryDataType);
+        defaultIncludes.add("NSData");
 
         advancedMapingTypes.add("NSDictionary");
         advancedMapingTypes.add("NSArray");
@@ -88,6 +87,7 @@ public class ObjcClientCodegen extends DefaultCodegen implements CodegenConfig {
         languageSpecificPrimitives.add("NSString");
         languageSpecificPrimitives.add("NSObject");
         languageSpecificPrimitives.add("NSDate");
+        languageSpecificPrimitives.add("NSData");
         languageSpecificPrimitives.add("NSURL");
         languageSpecificPrimitives.add("bool");
         languageSpecificPrimitives.add("BOOL");
@@ -95,7 +95,7 @@ public class ObjcClientCodegen extends DefaultCodegen implements CodegenConfig {
         typeMapping.clear();
         typeMapping.put("enum", "NSString");
         typeMapping.put("date", "NSDate");
-        typeMapping.put("DateTime", "NSDate");
+        typeMapping.put("datetime", "NSDate");
         typeMapping.put("boolean", "NSNumber");
         typeMapping.put("string", "NSString");
         typeMapping.put("integer", "NSNumber");
@@ -106,11 +106,15 @@ public class ObjcClientCodegen extends DefaultCodegen implements CodegenConfig {
         typeMapping.put("array", "NSArray");
         typeMapping.put("map", "NSDictionary");
         typeMapping.put("number", "NSNumber");
+        typeMapping.put("bigdecimal", "NSNumber");
         typeMapping.put("List", "NSArray");
         typeMapping.put("object", "NSObject");
         typeMapping.put("file", "NSURL");
-        typeMapping.put("binary", BinaryDataType);
-        typeMapping.put("ByteArray", BinaryDataType);
+        typeMapping.put("binary", "NSData");
+        typeMapping.put("bytearray", "NSData");
+        typeMapping.put("byte", "NSData");
+        typeMapping.put("uuid", "NSString");
+        typeMapping.put("password", "NSString");
 
         // ref: http://www.tutorialspoint.com/objective_c/objective_c_basic_syntax.htm
         setReservedWordsLowerCase(
@@ -143,6 +147,7 @@ public class ObjcClientCodegen extends DefaultCodegen implements CodegenConfig {
                         "NSObject",
                         "NSString",
                         "NSDate",
+                        "NSData",
                         "NSURL",
                         "NSDictionary")
         );
@@ -162,6 +167,8 @@ public class ObjcClientCodegen extends DefaultCodegen implements CodegenConfig {
         cliOptions.add(new CliOption(AUTHOR_EMAIL, "Email to use in the podspec file.").defaultValue("apiteam@swagger.io"));
         cliOptions.add(new CliOption(GIT_REPO_URL, "URL for the git repo where this podspec should point to.")
                 .defaultValue("https://github.com/swagger-api/swagger-codegen"));
+        cliOptions.add(new CliOption(CodegenConstants.HIDE_GENERATION_TIMESTAMP, "hides the timestamp when files were generated")
+                .defaultValue(Boolean.TRUE.toString()));
     }
 
     @Override
@@ -182,6 +189,14 @@ public class ObjcClientCodegen extends DefaultCodegen implements CodegenConfig {
     @Override
     public void processOpts() {
         super.processOpts();
+
+        // default HIDE_GENERATION_TIMESTAMP to true
+        if (!additionalProperties.containsKey(CodegenConstants.HIDE_GENERATION_TIMESTAMP)) {
+            additionalProperties.put(CodegenConstants.HIDE_GENERATION_TIMESTAMP, Boolean.TRUE.toString());
+        } else {
+            additionalProperties.put(CodegenConstants.HIDE_GENERATION_TIMESTAMP,
+                    Boolean.valueOf(additionalProperties().get(CodegenConstants.HIDE_GENERATION_TIMESTAMP).toString()));
+        }
 
         if (additionalProperties.containsKey(POD_NAME)) {
             setPodName((String) additionalProperties.get(POD_NAME));
@@ -292,8 +307,8 @@ public class ObjcClientCodegen extends DefaultCodegen implements CodegenConfig {
     public String getSwaggerType(Property p) {
         String swaggerType = super.getSwaggerType(p);
         String type = null;
-        if (typeMapping.containsKey(swaggerType)) {
-            type = typeMapping.get(swaggerType);
+        if (typeMapping.containsKey(swaggerType.toLowerCase())) {
+            type = typeMapping.get(swaggerType.toLowerCase());
             if (languageSpecificPrimitives.contains(type) && !foundationClasses.contains(type)) {
                 return toModelNameWithoutReservedWordCheck(type);
             }
@@ -303,29 +318,14 @@ public class ObjcClientCodegen extends DefaultCodegen implements CodegenConfig {
         return toModelNameWithoutReservedWordCheck(type);
     }
 
-    public CodegenProperty coreDatafromProperty(String name, Property p) {
-        CodegenProperty property = fromProperty(name, p);
-        if(!generateCoreData) {
-            return property;
-        }
-        property.baseType = getTypeCoreDataDeclaration(p);
-        return property;
-    }
-
     @Override
     public String getTypeDeclaration(Property p) {
         if (p instanceof ArrayProperty) {
             ArrayProperty ap = (ArrayProperty) p;
             Property inner = ap.getItems();
-            String innerType = getSwaggerType(inner);
-
             String innerTypeDeclaration = getTypeDeclaration(inner);
             if (innerTypeDeclaration.endsWith("*")) {
                 innerTypeDeclaration = innerTypeDeclaration.substring(0, innerTypeDeclaration.length() - 1);
-            }
-            
-            if(innerTypeDeclaration.equalsIgnoreCase(BinaryDataType)) {
-                return "NSData*";
             }
             // In this condition, type of property p is array of primitive,
             // return container type with pointer, e.g. `NSArray*<NSString*>*'
@@ -363,7 +363,6 @@ public class ObjcClientCodegen extends DefaultCodegen implements CodegenConfig {
             }
         } else {
             String swaggerType = getSwaggerType(p);
-
             // In this condition, type of p is objective-c primitive type, e.g. `NSSNumber',
             // return type of p with pointer, e.g. `NSNumber*'
             if (languageSpecificPrimitives.contains(swaggerType) &&
@@ -383,75 +382,9 @@ public class ObjcClientCodegen extends DefaultCodegen implements CodegenConfig {
         }
     }
 
-
-    public String getTypeCoreDataDeclaration(Property p) {
-        if (p instanceof ArrayProperty) {
-            ArrayProperty ap = (ArrayProperty) p;
-            Property inner = ap.getItems();
-            String innerType = getSwaggerType(inner);
-
-            String innerTypeDeclaration = getTypeDeclaration(inner);
-            if (innerTypeDeclaration.endsWith("*")) {
-                innerTypeDeclaration = innerTypeDeclaration.substring(0, innerTypeDeclaration.length() - 1);
-            }
-
-            if(innerTypeDeclaration.equalsIgnoreCase(BinaryDataType)) {
-                return "NSData*";
-            }
-            // In this codition, type of property p is array of primitive,
-            // return container type with pointer, e.g. `NSArray*<NSString*>*'
-            if (languageSpecificPrimitives.contains(innerTypeDeclaration)) {
-                return getSwaggerType(p) +  "<" + innerTypeDeclaration + "*>*";
-            }
-            // In this codition, type of property p is array of model,
-            // return container type combine inner type with pointer, e.g. `NSArray<SWGTag>*'
-            else {
-                for (String sd : advancedMapingTypes) {
-                    if(innerTypeDeclaration.startsWith(sd)) {
-                        return getSwaggerType(p) + "<" + innerTypeDeclaration + "*>*";
-                    }
-                }
-                return getSwaggerType(p) + "<" + innerTypeDeclaration + ">*";
-            }
-        } else if (p instanceof MapProperty) {
-            MapProperty mp = (MapProperty) p;
-            Property inner = mp.getAdditionalProperties();
-
-            String innerTypeDeclaration = getTypeDeclaration(inner);
-
-            if (innerTypeDeclaration.endsWith("*")) {
-                innerTypeDeclaration = innerTypeDeclaration.substring(0, innerTypeDeclaration.length() - 1);
-            }
-            if (languageSpecificPrimitives.contains(innerTypeDeclaration)) {
-                return getSwaggerType(p) +  "<NSString*, " + innerTypeDeclaration + "*>*";
-            } else {
-                for (String s : advancedMapingTypes) {
-                    if(innerTypeDeclaration.startsWith(s)) {
-                        return getSwaggerType(p) + "<NSString*, " + innerTypeDeclaration + "*>*";
-                    }
-                }
-                return getSwaggerType(p) + "<NSString*, " + innerTypeDeclaration + ">*";
-            }
-        } else {
-            String swaggerType = getSwaggerType(p);
-
-            // In this codition, type of p is objective-c primitive type, e.g. `NSSNumber',
-            // return type of p with pointer, e.g. `NSNumber*'
-            if (languageSpecificPrimitives.contains(swaggerType) &&
-                    foundationClasses.contains(swaggerType)) {
-                return swaggerType + "*";
-            }
-            // In this codition, type of p is c primitive type, e.g. `bool',
-            // return type of p, e.g. `bool'
-            else if (languageSpecificPrimitives.contains(swaggerType)) {
-                return swaggerType;
-            }
-            // In this codition, type of p is objective-c object type, e.g. `SWGPet',
-            // return type of p with pointer, e.g. `SWGPet*'
-            else {
-                return swaggerType + "*";
-            }
-        }
+    @Override
+    public boolean isDataTypeBinary(String dataType) {
+        return dataType.toLowerCase().startsWith("nsdata");
     }
 
     @Override
@@ -581,8 +514,8 @@ public class ObjcClientCodegen extends DefaultCodegen implements CodegenConfig {
         }
 
         // if name starting with special word, escape with '_'
-        for(int i =0; i < specialWords.length; i++) {
-            if (name.matches("(?i:^" + specialWords[i] + ".*)"))
+        for (String specialWord : specialWords) {
+            if (name.matches("(?i:^" + specialWord + ".*)"))
                 name = escapeSpecialWord(name);
         }
 
@@ -691,7 +624,7 @@ public class ObjcClientCodegen extends DefaultCodegen implements CodegenConfig {
         if (p instanceof StringProperty) {
             StringProperty dp = (StringProperty) p;
             if (dp.getDefault() != null) {
-                return "@\"" + dp.getDefault().toString() + "\"";
+                return "@\"" + dp.getDefault() + "\"";
             }
         } else if (p instanceof BooleanProperty) {
             BooleanProperty dp = (BooleanProperty) p;
@@ -780,6 +713,8 @@ public class ObjcClientCodegen extends DefaultCodegen implements CodegenConfig {
                 example = "2013-10-20T19:20:30+01:00";
             }
             example = "@\"" + escapeText(example) + "\"";
+        } else if ("NSData".equalsIgnoreCase(type)) {
+            example = "1234";
         } else if (!languageSpecificPrimitives.contains(type)) {
             // type is a model class, e.g. User
             type = type.replace("*", "");
@@ -800,5 +735,15 @@ public class ObjcClientCodegen extends DefaultCodegen implements CodegenConfig {
         p.example = example;
     }
 
+    @Override
+    public String escapeQuotationMark(String input) {
+        // remove " to avoid code injection
+        return input.replace("\"", "");
+    }
+
+    @Override
+    public String escapeUnsafeCharacters(String input) {
+        return input.replace("*/", "*_/").replace("/*", "/_*");
+    }
 
 }

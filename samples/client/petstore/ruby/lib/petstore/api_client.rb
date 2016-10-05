@@ -1,7 +1,7 @@
 =begin
-Swagger Petstore
+#Swagger Petstore
 
-This spec is mainly for testing Petstore server and contains fake endpoints, models. Please do not use this for any other purpose. Special characters: \" \\ 
+#This spec is mainly for testing Petstore server and contains fake endpoints, models. Please do not use this for any other purpose. Special characters: \" \\
 
 OpenAPI spec version: 1.0.0
 Contact: apiteam@swagger.io
@@ -39,7 +39,7 @@ module Petstore
     attr_accessor :default_headers
 
     # Initializes the ApiClient
-    # @option config [Configuration] Configuraiton for initializing the object, default to Configuration.default
+    # @option config [Configuration] Configuration for initializing the object, default to Configuration.default
     def initialize(config = Configuration.default)
       @config = config
       @user_agent = "Swagger-Codegen/#{VERSION}/ruby"
@@ -66,10 +66,18 @@ module Petstore
       end
 
       unless response.success?
-        fail ApiError.new(:code => response.code,
-                          :response_headers => response.headers,
-                          :response_body => response.body),
-             response.status_message
+        if response.timed_out?
+          fail ApiError.new('Connection timed out')
+        elsif response.code == 0
+          # Errors from libcurl will be made visible here
+          fail ApiError.new(:code => 0,
+                            :message => response.return_message)
+        else
+          fail ApiError.new(:code => response.code,
+                            :response_headers => response.headers,
+                            :response_body => response.body),
+               response.status_message
+        end
       end
 
       if opts[:return_type]
@@ -99,17 +107,23 @@ module Petstore
 
       update_params_for_auth! header_params, query_params, opts[:auth_names]
 
+      # set ssl_verifyhosts option based on @config.verify_ssl_host (true/false)
+      _verify_ssl_host = @config.verify_ssl_host ? 2 : 0
+
       req_opts = {
         :method => http_method,
         :headers => header_params,
         :params => query_params,
+        :params_encoding => @config.params_encoding,
         :timeout => @config.timeout,
         :ssl_verifypeer => @config.verify_ssl,
+        :ssl_verifyhost => _verify_ssl_host,
         :sslcert => @config.cert_file,
         :sslkey => @config.key_file,
         :verbose => @config.debugging
       }
 
+      # set custom cert, if provided
       req_opts[:cainfo] = @config.ssl_ca_cert if @config.ssl_ca_cert
 
       if [:post, :patch, :put, :delete].include?(http_method)
@@ -129,7 +143,7 @@ module Petstore
     #   application/json; charset=UTF8
     #   APPLICATION/JSON
     # @param [String] mime MIME
-    # @return [Boolean] True if the MIME is applicaton/json
+    # @return [Boolean] True if the MIME is application/json
     def json_mime?(mime)
        !(mime =~ /\Aapplication\/json(;.*)?\z/i).nil?
     end
@@ -215,7 +229,7 @@ module Petstore
     # @return [Tempfile] the file downloaded
     def download_file(response)
       content_disposition = response.headers['Content-Disposition']
-      if content_disposition
+      if content_disposition and content_disposition =~ /filename=/i
         filename = content_disposition[/filename=['"]?([^'"\s]+)['"]?/, 1]
         prefix = sanitize_filename(filename)
       else
@@ -282,7 +296,7 @@ module Petstore
     # Update hearder and query params based on authentication settings.
     #
     # @param [Hash] header_params Header parameters
-    # @param [Hash] form_params Query parameters
+    # @param [Hash] query_params Query parameters
     # @param [String] auth_names Authentication scheme name
     def update_params_for_auth!(header_params, query_params, auth_names)
       Array(auth_names).each do |auth_name|

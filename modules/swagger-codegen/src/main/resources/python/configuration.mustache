@@ -3,19 +3,15 @@
 {{>partial_header}}
 
 from __future__ import absolute_import
-import base64
-import urllib3
 
-try:
-    import httplib
-except ImportError:
-    # for python3
-    import http.client as httplib
+import urllib3
 
 import sys
 import logging
 
 from six import iteritems
+from six.moves import http_client as httplib
+
 
 def singleton(cls, *args, **kw):
     instances = {}
@@ -59,7 +55,6 @@ class Configuration(object):
         # access token for OAuth
         self.access_token = ""
 {{/isOAuth}}{{/authMethods}}
-
         # Logging Settings
         self.logger = {}
         self.logger["package_logger"] = logging.getLogger("{{packageName}}")
@@ -219,15 +214,15 @@ class Configuration(object):
                     'key': 'Authorization',
                     'value': self.get_basic_auth_token()
                 },
-{{/isBasic}}{{#isOauth}}
-            '{{name}}': 
+{{/isBasic}}{{#isOAuth}}
+            '{{name}}':
                 {
                     'type': 'oauth2',
                     'in': 'header',
                     'key': 'Authorization',
                     'value': 'Bearer ' + self.access_token
                 },
-{{/isOauth}}{{/authMethods}}
+{{/isOAuth}}{{/authMethods}}
         }
 
     def to_debug_report(self):

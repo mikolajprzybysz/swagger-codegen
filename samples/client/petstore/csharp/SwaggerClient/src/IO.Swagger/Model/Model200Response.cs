@@ -1,7 +1,7 @@
 /* 
  * Swagger Petstore
  *
- * This spec is mainly for testing Petstore server and contains fake endpoints, models. Please do not use this for any other purpose. Special characters: \" \\ 
+ * This spec is mainly for testing Petstore server and contains fake endpoints, models. Please do not use this for any other purpose. Special characters: \" \\
  *
  * OpenAPI spec version: 1.0.0
  * Contact: apiteam@swagger.io
@@ -24,12 +24,14 @@ using System;
 using System.Linq;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using System.ComponentModel.DataAnnotations;
 
 namespace IO.Swagger.Model
 {
@@ -37,15 +39,17 @@ namespace IO.Swagger.Model
     /// Model for testing model name starting with number
     /// </summary>
     [DataContract]
-    public partial class Model200Response :  IEquatable<Model200Response>
+    public partial class Model200Response :  IEquatable<Model200Response>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Model200Response" /> class.
         /// </summary>
         /// <param name="Name">Name.</param>
-        public Model200Response(int? Name = null)
+        /// <param name="_Class">_Class.</param>
+        public Model200Response(int? Name = null, string _Class = null)
         {
             this.Name = Name;
+            this._Class = _Class;
         }
         
         /// <summary>
@@ -53,6 +57,11 @@ namespace IO.Swagger.Model
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public int? Name { get; set; }
+        /// <summary>
+        /// Gets or Sets _Class
+        /// </summary>
+        [DataMember(Name="class", EmitDefaultValue=false)]
+        public string _Class { get; set; }
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -62,6 +71,7 @@ namespace IO.Swagger.Model
             var sb = new StringBuilder();
             sb.Append("class Model200Response {\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
+            sb.Append("  _Class: ").Append(_Class).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -102,6 +112,11 @@ namespace IO.Swagger.Model
                     this.Name == other.Name ||
                     this.Name != null &&
                     this.Name.Equals(other.Name)
+                ) && 
+                (
+                    this._Class == other._Class ||
+                    this._Class != null &&
+                    this._Class.Equals(other._Class)
                 );
         }
 
@@ -118,8 +133,15 @@ namespace IO.Swagger.Model
                 // Suitable nullity checks etc, of course :)
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
+                if (this._Class != null)
+                    hash = hash * 59 + this._Class.GetHashCode();
                 return hash;
             }
+        }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        { 
+            yield break;
         }
     }
 

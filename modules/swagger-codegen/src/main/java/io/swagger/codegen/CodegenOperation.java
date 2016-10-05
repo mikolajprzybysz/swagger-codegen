@@ -42,10 +42,10 @@ public class CodegenOperation {
      *
      * @return true if parameter exists, false otherwise
      */
-    private static boolean nonempty(List<CodegenParameter> params) {
+    private static boolean nonempty(List<?> params) {
         return params != null && params.size() > 0;
     }
-
+    
     /**
      * Check if there's at least one body parameter
      *
@@ -89,6 +89,15 @@ public class CodegenOperation {
      */
     public boolean getHasFormParams() {
         return nonempty(formParams);
+    }
+
+    /**
+     * Check if there's at least one example parameter
+     *
+     * @return true if examples parameter exists, false otherwise
+     */
+    public boolean getHasExamples() {
+        return nonempty(examples);
     }
 
     /**
@@ -272,7 +281,7 @@ public class CodegenOperation {
 
     @Override
     public int hashCode() {
-        int result = responseHeaders != null ? responseHeaders.hashCode() : 0;
+        int result = responseHeaders.hashCode();
         result = 31 * result + (hasAuthMethods != null ? hasAuthMethods.hashCode() : 0);
         result = 31 * result + (hasConsumes != null ? hasConsumes.hashCode() : 0);
         result = 31 * result + (hasProduces != null ? hasProduces.hashCode() : 0);

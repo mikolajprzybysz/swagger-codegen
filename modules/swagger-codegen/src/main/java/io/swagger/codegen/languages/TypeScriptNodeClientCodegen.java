@@ -26,6 +26,11 @@ public class TypeScriptNodeClientCodegen extends AbstractTypeScriptClientCodegen
 
     public TypeScriptNodeClientCodegen() {
         super();
+
+        // clear import mapping (from default generator) as TS does not use it
+        // at the moment
+        importMapping.clear();
+
         outputFolder = "generated-code/typescript-node";
         embeddedTemplateDir = templateDir = "typescript-node";
 
@@ -41,6 +46,7 @@ public class TypeScriptNodeClientCodegen extends AbstractTypeScriptClientCodegen
         super.processOpts();
         supportingFiles.add(new SupportingFile("api.mustache", null, "api.ts"));
         supportingFiles.add(new SupportingFile("git_push.sh.mustache", "", "git_push.sh"));
+        supportingFiles.add(new SupportingFile("gitignore", "", ".gitignore"));
 
         if(additionalProperties.containsKey(NPM_NAME)) {
             addNpmPackageGeneration();

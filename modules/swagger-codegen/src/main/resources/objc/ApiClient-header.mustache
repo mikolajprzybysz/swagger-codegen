@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 #import <ISO8601/ISO8601.h>
-#import <AFNetworking.h>
+#import <AFNetworking/AFNetworking.h>
 #import "{{classPrefix}}JSONResponseSerializer.h"
 #import "{{classPrefix}}JSONRequestSerializer.h"
 #import "{{classPrefix}}QueryParamCollection.h"
@@ -128,7 +128,7 @@ extern NSString *const {{classPrefix}}ResponseObjectErrorKey;
 /**
  * Updates header parameters and query parameters for authentication
  *
- * @param headers The header parameter will be udpated, passed by pointer to pointer.
+ * @param headers The header parameter will be updated, passed by pointer to pointer.
  * @param querys The query parameters will be updated, passed by pointer to pointer.
  * @param authSettings The authentication names NSArray.
  */

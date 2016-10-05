@@ -7,7 +7,7 @@
  * @category Class
  * @package  Swagger\Client
  * @author   http://github.com/swagger-api/swagger-codegen
- * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
+ * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  * @link     https://github.com/swagger-api/swagger-codegen
  */
 
@@ -46,10 +46,11 @@ use \ArrayAccess;
 /**
  * ArrayTest Class Doc Comment
  *
- * @category    Class
+ * @category    Class */
+/**
  * @package     Swagger\Client
  * @author      http://github.com/swagger-api/swagger-codegen
- * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
+ * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  * @link        https://github.com/swagger-api/swagger-codegen
  */
 class ArrayTest implements ArrayAccess
@@ -64,9 +65,11 @@ class ArrayTest implements ArrayAccess
       * Array of property to type mappings. Used for (de)serialization
       * @var string[]
       */
-    protected static $swaggerTypes = array(
-        
-    );
+    protected static $swaggerTypes = [
+        'array_of_string' => 'string[]',
+        'array_array_of_integer' => 'int[][]',
+        'array_array_of_model' => '\Swagger\Client\Model\ReadOnlyFirst[][]'
+    ];
 
     public static function swaggerTypes()
     {
@@ -77,35 +80,43 @@ class ArrayTest implements ArrayAccess
      * Array of attributes where the key is the local name, and the value is the original name
      * @var string[]
      */
-    protected static $attributeMap = array(
-        
-    );
+    protected static $attributeMap = [
+        'array_of_string' => 'array_of_string',
+        'array_array_of_integer' => 'array_array_of_integer',
+        'array_array_of_model' => 'array_array_of_model'
+    ];
+
+
+    /**
+     * Array of attributes to setter functions (for deserialization of responses)
+     * @var string[]
+     */
+    protected static $setters = [
+        'array_of_string' => 'setArrayOfString',
+        'array_array_of_integer' => 'setArrayArrayOfInteger',
+        'array_array_of_model' => 'setArrayArrayOfModel'
+    ];
+
+
+    /**
+     * Array of attributes to getter functions (for serialization of requests)
+     * @var string[]
+     */
+    protected static $getters = [
+        'array_of_string' => 'getArrayOfString',
+        'array_array_of_integer' => 'getArrayArrayOfInteger',
+        'array_array_of_model' => 'getArrayArrayOfModel'
+    ];
 
     public static function attributeMap()
     {
         return self::$attributeMap;
     }
 
-    /**
-     * Array of attributes to setter functions (for deserialization of responses)
-     * @var string[]
-     */
-    protected static $setters = array(
-        
-    );
-
     public static function setters()
     {
         return self::$setters;
     }
-
-    /**
-     * Array of attributes to getter functions (for serialization of requests)
-     * @var string[]
-     */
-    protected static $getters = array(
-        
-    );
 
     public static function getters()
     {
@@ -120,14 +131,17 @@ class ArrayTest implements ArrayAccess
      * Associative array for storing property values
      * @var mixed[]
      */
-    protected $container = array();
+    protected $container = [];
 
     /**
      * Constructor
-     * @param mixed[] $data Associated array of property value initalizing the model
+     * @param mixed[] $data Associated array of property values initializing the model
      */
     public function __construct(array $data = null)
     {
+        $this->container['array_of_string'] = isset($data['array_of_string']) ? $data['array_of_string'] : null;
+        $this->container['array_array_of_integer'] = isset($data['array_array_of_integer']) ? $data['array_array_of_integer'] : null;
+        $this->container['array_array_of_model'] = isset($data['array_array_of_model']) ? $data['array_array_of_model'] : null;
     }
 
     /**
@@ -137,7 +151,7 @@ class ArrayTest implements ArrayAccess
      */
     public function listInvalidProperties()
     {
-        $invalid_properties = array();
+        $invalid_properties = [];
         return $invalid_properties;
     }
 
@@ -152,6 +166,69 @@ class ArrayTest implements ArrayAccess
         return true;
     }
 
+
+    /**
+     * Gets array_of_string
+     * @return string[]
+     */
+    public function getArrayOfString()
+    {
+        return $this->container['array_of_string'];
+    }
+
+    /**
+     * Sets array_of_string
+     * @param string[] $array_of_string
+     * @return $this
+     */
+    public function setArrayOfString($array_of_string)
+    {
+        $this->container['array_of_string'] = $array_of_string;
+
+        return $this;
+    }
+
+    /**
+     * Gets array_array_of_integer
+     * @return int[][]
+     */
+    public function getArrayArrayOfInteger()
+    {
+        return $this->container['array_array_of_integer'];
+    }
+
+    /**
+     * Sets array_array_of_integer
+     * @param int[][] $array_array_of_integer
+     * @return $this
+     */
+    public function setArrayArrayOfInteger($array_array_of_integer)
+    {
+        $this->container['array_array_of_integer'] = $array_array_of_integer;
+
+        return $this;
+    }
+
+    /**
+     * Gets array_array_of_model
+     * @return \Swagger\Client\Model\ReadOnlyFirst[][]
+     */
+    public function getArrayArrayOfModel()
+    {
+        return $this->container['array_array_of_model'];
+    }
+
+    /**
+     * Sets array_array_of_model
+     * @param \Swagger\Client\Model\ReadOnlyFirst[][] $array_array_of_model
+     * @return $this
+     */
+    public function setArrayArrayOfModel($array_array_of_model)
+    {
+        $this->container['array_array_of_model'] = $array_array_of_model;
+
+        return $this;
+    }
     /**
      * Returns true if offset exists. False otherwise.
      * @param  integer $offset Offset

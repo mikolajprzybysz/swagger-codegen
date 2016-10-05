@@ -1,11 +1,10 @@
 package io.swagger.model;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.model.Category;
 import io.swagger.model.Tag;
 import java.util.ArrayList;
 import java.util.List;
-
-
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -23,14 +22,19 @@ import javax.xml.bind.annotation.XmlEnum;
 public class Pet  {
   
 
+  @XmlElement(name="id")
   private Long id = null;
 
+  @XmlElement(name="category")
   private Category category = null;
 
+  @XmlElement(name="name")
   private String name = null;
 
+  @XmlElement(name="photoUrls")
   private List<String> photoUrls = new ArrayList<String>();
 
+  @XmlElement(name="tags")
   private List<Tag> tags = new ArrayList<Tag>();
 
 @XmlType(name="StatusEnum")
@@ -55,6 +59,8 @@ public enum StatusEnum {
     }
 }
 
+
+  @XmlElement(name="status")
   private StatusEnum status = null;
 
   /**

@@ -20,7 +20,7 @@ For valid response try integer IDs with value &lt; 1000. Anything above 1000 or 
 
 ### Example
 ```javascript
-var SwaggerPetstore = require('swagger-petstore');
+var SwaggerPetstore = require('swagger_petstore');
 
 var apiInstance = new SwaggerPetstore.StoreApi();
 
@@ -58,7 +58,7 @@ No authorization required
 
 <a name="getInventory"></a>
 # **getInventory**
-> {&#39;String&#39;: &#39;Integer&#39;} getInventory()
+> {&#39;String&#39;: &#39;Number&#39;} getInventory()
 
 Returns pet inventories by status
 
@@ -66,7 +66,7 @@ Returns a map of status codes to quantities
 
 ### Example
 ```javascript
-var SwaggerPetstore = require('swagger-petstore');
+var SwaggerPetstore = require('swagger_petstore');
 var defaultClient = SwaggerPetstore.ApiClient.default;
 
 // Configure API key authorization: api_key
@@ -92,7 +92,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-**{&#39;String&#39;: &#39;Integer&#39;}**
+**{&#39;String&#39;: &#39;Number&#39;}**
 
 ### Authorization
 
@@ -113,11 +113,11 @@ For valid response try integer IDs with value &lt;&#x3D; 5 or &gt; 10. Other val
 
 ### Example
 ```javascript
-var SwaggerPetstore = require('swagger-petstore');
+var SwaggerPetstore = require('swagger_petstore');
 
 var apiInstance = new SwaggerPetstore.StoreApi();
 
-var orderId = 789; // Integer | ID of pet that needs to be fetched
+var orderId = 789; // Number | ID of pet that needs to be fetched
 
 
 var callback = function(error, data, response) {
@@ -134,7 +134,7 @@ apiInstance.getOrderById(orderId, callback);
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **orderId** | **Integer**| ID of pet that needs to be fetched | 
+ **orderId** | **Number**| ID of pet that needs to be fetched | 
 
 ### Return type
 
@@ -159,7 +159,7 @@ Place an order for a pet
 
 ### Example
 ```javascript
-var SwaggerPetstore = require('swagger-petstore');
+var SwaggerPetstore = require('swagger_petstore');
 
 var apiInstance = new SwaggerPetstore.StoreApi();
 

@@ -1,7 +1,7 @@
 /* 
  * Swagger Petstore
  *
- * This spec is mainly for testing Petstore server and contains fake endpoints, models. Please do not use this for any other purpose. Special characters: \" \\ 
+ * This spec is mainly for testing Petstore server and contains fake endpoints, models. Please do not use this for any other purpose. Special characters: \" \\
  *
  * OpenAPI spec version: 1.0.0
  * Contact: apiteam@swagger.io
@@ -24,12 +24,14 @@ using System;
 using System.Linq;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using System.ComponentModel.DataAnnotations;
 
 namespace IO.Swagger.Model
 {
@@ -37,7 +39,7 @@ namespace IO.Swagger.Model
     /// Category
     /// </summary>
     [DataContract]
-    public partial class Category :  IEquatable<Category>
+    public partial class Category :  IEquatable<Category>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Category" /> class.
@@ -135,6 +137,11 @@ namespace IO.Swagger.Model
                     hash = hash * 59 + this.Name.GetHashCode();
                 return hash;
             }
+        }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        { 
+            yield break;
         }
     }
 

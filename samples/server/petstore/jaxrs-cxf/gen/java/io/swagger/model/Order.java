@@ -1,7 +1,6 @@
 package io.swagger.model;
 
-
-
+import io.swagger.annotations.ApiModel;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -19,12 +18,16 @@ import javax.xml.bind.annotation.XmlEnum;
 public class Order  {
   
 
+  @XmlElement(name="id")
   private Long id = null;
 
+  @XmlElement(name="petId")
   private Long petId = null;
 
+  @XmlElement(name="quantity")
   private Integer quantity = null;
 
+  @XmlElement(name="shipDate")
   private javax.xml.datatype.XMLGregorianCalendar shipDate = null;
 
 @XmlType(name="StatusEnum")
@@ -49,8 +52,11 @@ public enum StatusEnum {
     }
 }
 
+
+  @XmlElement(name="status")
   private StatusEnum status = null;
 
+  @XmlElement(name="complete")
   private Boolean complete = false;
 
   /**

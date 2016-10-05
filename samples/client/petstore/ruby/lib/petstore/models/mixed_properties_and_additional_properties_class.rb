@@ -1,7 +1,7 @@
 =begin
-Swagger Petstore
+#Swagger Petstore
 
-This spec is mainly for testing Petstore server and contains fake endpoints, models. Please do not use this for any other purpose. Special characters: \" \\ 
+#This spec is mainly for testing Petstore server and contains fake endpoints, models. Please do not use this for any other purpose. Special characters: \" \\
 
 OpenAPI spec version: 1.0.0
 Contact: apiteam@swagger.io
@@ -30,11 +30,15 @@ module Petstore
 
     attr_accessor :date_time
 
+    attr_accessor :map
+
+
     # Attribute mapping from ruby-style variable name to JSON key.
     def self.attribute_map
       {
         :'uuid' => :'uuid',
-        :'date_time' => :'dateTime'
+        :'date_time' => :'dateTime',
+        :'map' => :'map'
       }
     end
 
@@ -42,7 +46,8 @@ module Petstore
     def self.swagger_types
       {
         :'uuid' => :'String',
-        :'date_time' => :'DateTime'
+        :'date_time' => :'DateTime',
+        :'map' => :'Hash<String, Animal>'
       }
     end
 
@@ -62,6 +67,12 @@ module Petstore
         self.date_time = attributes[:'dateTime']
       end
 
+      if attributes.has_key?(:'map')
+        if (value = attributes[:'map']).is_a?(Array)
+          self.map = value
+        end
+      end
+
     end
 
     # Show invalid properties with the reasons. Usually used together with valid?
@@ -74,6 +85,7 @@ module Petstore
     # Check to see if the all the properties in the model are valid
     # @return true if the model is valid
     def valid?
+      return true
     end
 
     # Checks equality by comparing each attribute.
@@ -82,7 +94,8 @@ module Petstore
       return true if self.equal?(o)
       self.class == o.class &&
           uuid == o.uuid &&
-          date_time == o.date_time
+          date_time == o.date_time &&
+          map == o.map
     end
 
     # @see the `==` method
@@ -94,7 +107,7 @@ module Petstore
     # Calculates hash code according to all attributes.
     # @return [Fixnum] Hash code
     def hash
-      [uuid, date_time].hash
+      [uuid, date_time, map].hash
     end
 
     # Builds the object from hash
@@ -103,7 +116,7 @@ module Petstore
     def build_from_hash(attributes)
       return nil unless attributes.is_a?(Hash)
       self.class.swagger_types.each_pair do |key, type|
-        if type =~ /^Array<(.*)>/i
+        if type =~ /\AArray<(.*)>/i
           # check to ensure the input is an array given that the the attribute
           # is documented as an array but the input is not
           if attributes[self.class.attribute_map[key]].is_a?(Array)
@@ -134,7 +147,7 @@ module Petstore
       when :Float
         value.to_f
       when :BOOLEAN
-        if value.to_s =~ /^(true|t|yes|y|1)$/i
+        if value.to_s =~ /\A(true|t|yes|y|1)\z/i
           true
         else
           false
@@ -145,7 +158,7 @@ module Petstore
       when /\AArray<(?<inner_type>.+)>\z/
         inner_type = Regexp.last_match[:inner_type]
         value.map { |v| _deserialize(inner_type, v) }
-      when /\AHash<(?<k_type>.+), (?<v_type>.+)>\z/
+      when /\AHash<(?<k_type>.+?), (?<v_type>.+)>\z/
         k_type = Regexp.last_match[:k_type]
         v_type = Regexp.last_match[:v_type]
         {}.tap do |hash|

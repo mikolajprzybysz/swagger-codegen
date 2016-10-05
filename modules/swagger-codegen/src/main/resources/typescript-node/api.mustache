@@ -1,3 +1,4 @@
+{{>licenseInfo}}
 import request = require('request');
 import http = require('http');
 {{^supportsES6}}
@@ -26,7 +27,7 @@ export class {{classname}} {{#parent}}extends {{{parent}}} {{/parent}}{
     * {{{description}}}
     */
 {{/description}}
-    '{{name}}': {{#isEnum}}{{classname}}.{{{datatypeWithEnum}}}{{/isEnum}}{{^isEnum}}{{{datatype}}}{{/isEnum}};
+    '{{name}}': {{#isEnum}}{{{datatypeWithEnum}}}{{/isEnum}}{{^isEnum}}{{{datatype}}}{{/isEnum}};
 {{/vars}}
 }
 
@@ -34,8 +35,12 @@ export class {{classname}} {{#parent}}extends {{{parent}}} {{/parent}}{
 export namespace {{classname}} {
 {{#vars}}
 {{#isEnum}}
-    export enum {{datatypeWithEnum}} { {{#allowableValues}}{{#values}}
-        {{datatypeWithEnum}}_{{.}} = <any> '{{.}}'{{^-last}},{{/-last}}{{/values}}{{/allowableValues}}
+    export enum {{enumName}} {
+        {{#allowableValues}}
+        {{#enumVars}}
+        {{name}} = <any> {{{value}}}{{^-last}},{{/-last}}
+        {{/enumVars}}
+        {{/allowableValues}}
     }
 {{/isEnum}}
 {{/vars}}

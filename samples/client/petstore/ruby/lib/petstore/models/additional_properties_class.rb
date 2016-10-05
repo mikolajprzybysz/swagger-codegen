@@ -1,7 +1,7 @@
 =begin
-Swagger Petstore
+#Swagger Petstore
 
-This spec is mainly for testing Petstore server and contains fake endpoints, models. Please do not use this for any other purpose. Special characters: \" \\ 
+#This spec is mainly for testing Petstore server and contains fake endpoints, models. Please do not use this for any other purpose. Special characters: \" \\
 
 OpenAPI spec version: 1.0.0
 Contact: apiteam@swagger.io
@@ -26,15 +26,24 @@ require 'date'
 module Petstore
 
   class AdditionalPropertiesClass
+    attr_accessor :map_property
+
+    attr_accessor :map_of_map_property
+
+
     # Attribute mapping from ruby-style variable name to JSON key.
     def self.attribute_map
       {
+        :'map_property' => :'map_property',
+        :'map_of_map_property' => :'map_of_map_property'
       }
     end
 
     # Attribute type mapping.
     def self.swagger_types
       {
+        :'map_property' => :'Hash<String, String>',
+        :'map_of_map_property' => :'Hash<String, Hash<String, String>>'
       }
     end
 
@@ -45,6 +54,18 @@ module Petstore
 
       # convert string to symbol for hash key
       attributes = attributes.each_with_object({}){|(k,v), h| h[k.to_sym] = v}
+
+      if attributes.has_key?(:'map_property')
+        if (value = attributes[:'map_property']).is_a?(Array)
+          self.map_property = value
+        end
+      end
+
+      if attributes.has_key?(:'map_of_map_property')
+        if (value = attributes[:'map_of_map_property']).is_a?(Array)
+          self.map_of_map_property = value
+        end
+      end
 
     end
 
@@ -58,13 +79,16 @@ module Petstore
     # Check to see if the all the properties in the model are valid
     # @return true if the model is valid
     def valid?
+      return true
     end
 
     # Checks equality by comparing each attribute.
     # @param [Object] Object to be compared
     def ==(o)
       return true if self.equal?(o)
-      self.class == o.class
+      self.class == o.class &&
+          map_property == o.map_property &&
+          map_of_map_property == o.map_of_map_property
     end
 
     # @see the `==` method
@@ -76,7 +100,7 @@ module Petstore
     # Calculates hash code according to all attributes.
     # @return [Fixnum] Hash code
     def hash
-      [].hash
+      [map_property, map_of_map_property].hash
     end
 
     # Builds the object from hash
@@ -85,7 +109,7 @@ module Petstore
     def build_from_hash(attributes)
       return nil unless attributes.is_a?(Hash)
       self.class.swagger_types.each_pair do |key, type|
-        if type =~ /^Array<(.*)>/i
+        if type =~ /\AArray<(.*)>/i
           # check to ensure the input is an array given that the the attribute
           # is documented as an array but the input is not
           if attributes[self.class.attribute_map[key]].is_a?(Array)
@@ -116,7 +140,7 @@ module Petstore
       when :Float
         value.to_f
       when :BOOLEAN
-        if value.to_s =~ /^(true|t|yes|y|1)$/i
+        if value.to_s =~ /\A(true|t|yes|y|1)\z/i
           true
         else
           false
@@ -127,7 +151,7 @@ module Petstore
       when /\AArray<(?<inner_type>.+)>\z/
         inner_type = Regexp.last_match[:inner_type]
         value.map { |v| _deserialize(inner_type, v) }
-      when /\AHash<(?<k_type>.+), (?<v_type>.+)>\z/
+      when /\AHash<(?<k_type>.+?), (?<v_type>.+)>\z/
         k_type = Regexp.last_match[:k_type]
         v_type = Regexp.last_match[:v_type]
         {}.tap do |hash|

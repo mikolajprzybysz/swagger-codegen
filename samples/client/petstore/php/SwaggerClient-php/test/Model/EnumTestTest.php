@@ -7,7 +7,7 @@
  * @category Class
  * @package  Swagger\Client
  * @author   http://github.com/swagger-api/swagger-codegen
- * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
+ * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  * @link     https://github.com/swagger-api/swagger-codegen
  */
 /**
@@ -40,7 +40,7 @@ namespace Swagger\Client\Model;
  * @description EnumTest
  * @package     Swagger\Client
  * @author      http://github.com/swagger-api/swagger-codegen
- * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
+ * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  * @link        https://github.com/swagger-api/swagger-codegen
  */
 class EnumTestTest extends \PHPUnit_Framework_TestCase
@@ -67,11 +67,11 @@ class EnumTestTest extends \PHPUnit_Framework_TestCase
      */
     public function testEnumTest()
     {
-        $this->assertSame(Swagger\Client\Model\EnumTest::ENUM_STRING_UPPER, "UPPER");
-        $this->assertSame(Swagger\Client\Model\EnumTest::ENUM_STRING_LOWER, "lower");
-        $this->assertSame(Swagger\Client\Model\EnumTest::ENUM_INTEGER_1, 1);
-        $this->assertSame(Swagger\Client\Model\EnumTest::ENUM_INTEGER_MINUS_1, -1);
-        $this->assertSame(Swagger\Client\Model\EnumTest::ENUM_NUMBER_1_DOT_1, 1.1);
-        $this->assertSame(Swagger\Client\Model\EnumTest::ENUM_NUMBER_MINUS_1_DOT_2, -1.2);
+        $this->assertSame(EnumTest::ENUM_STRING_UPPER, "UPPER");
+        $this->assertSame(EnumTest::ENUM_STRING_LOWER, "lower");
+        $this->assertSame(EnumTest::ENUM_INTEGER_1, 1);
+        $this->assertSame(EnumTest::ENUM_INTEGER_MINUS_1, -1);
+        $this->assertSame(EnumTest::ENUM_NUMBER_1_DOT_1, 1.1);
+        $this->assertSame(EnumTest::ENUM_NUMBER_MINUS_1_DOT_2, -1.2);
     }
 }

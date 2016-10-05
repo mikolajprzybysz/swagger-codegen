@@ -38,8 +38,10 @@ public class SwiftCodegen extends DefaultCodegen implements CodegenConfig {
     public static final String POD_SCREENSHOTS = "podScreenshots";
     public static final String POD_DOCUMENTATION_URL = "podDocumentationURL";
     public static final String SWIFT_USE_API_NAMESPACE = "swiftUseApiNamespace";
+    public static final String DEFAULT_POD_AUTHORS = "Swagger Codegen";
     protected static final String LIBRARY_PROMISE_KIT = "PromiseKit";
-    protected static final String[] RESPONSE_LIBRARIES = { LIBRARY_PROMISE_KIT };
+    protected static final String LIBRARY_RX_SWIFT = "RxSwift";
+    protected static final String[] RESPONSE_LIBRARIES = { LIBRARY_PROMISE_KIT, LIBRARY_RX_SWIFT };
     protected String projectName = "SwaggerClient";
     protected boolean unwrapRequired;
     protected boolean swiftUseApiNamespace;
@@ -86,8 +88,10 @@ public class SwiftCodegen extends DefaultCodegen implements CodegenConfig {
                 );
         defaultIncludes = new HashSet<String>(
                 Arrays.asList(
+                    "NSData",
                     "NSDate",
                     "NSURL", // for file
+                    "NSUUID",
                     "Array",
                     "Dictionary",
                     "Set",
@@ -127,10 +131,9 @@ public class SwiftCodegen extends DefaultCodegen implements CodegenConfig {
         typeMapping.put("double", "Double");
         typeMapping.put("object", "AnyObject");
         typeMapping.put("file", "NSURL");
-        //TODO binary should be mapped to byte array
-        // mapped to String as a workaround
-        typeMapping.put("binary", "String");
-        typeMapping.put("ByteArray", "String");
+        typeMapping.put("binary", "NSData");
+        typeMapping.put("ByteArray", "NSData");
+        typeMapping.put("UUID", "NSUUID");
 
         importMapping = new HashMap<String, String>();
 
@@ -151,11 +154,21 @@ public class SwiftCodegen extends DefaultCodegen implements CodegenConfig {
         cliOptions.add(new CliOption(POD_SCREENSHOTS, "Screenshots used for Podspec"));
         cliOptions.add(new CliOption(POD_DOCUMENTATION_URL, "Documentation URL used for Podspec"));
         cliOptions.add(new CliOption(SWIFT_USE_API_NAMESPACE, "Flag to make all the API classes inner-class of {{projectName}}API"));
+        cliOptions.add(new CliOption(CodegenConstants.HIDE_GENERATION_TIMESTAMP, "hides the timestamp when files were generated")
+                .defaultValue(Boolean.TRUE.toString()));
+
     }
 
     @Override
     public void processOpts() {
         super.processOpts();
+        // default HIDE_GENERATION_TIMESTAMP to true
+        if (!additionalProperties.containsKey(CodegenConstants.HIDE_GENERATION_TIMESTAMP)) {
+            additionalProperties.put(CodegenConstants.HIDE_GENERATION_TIMESTAMP, Boolean.TRUE.toString());
+        } else {
+            additionalProperties.put(CodegenConstants.HIDE_GENERATION_TIMESTAMP,
+                    Boolean.valueOf(additionalProperties().get(CodegenConstants.HIDE_GENERATION_TIMESTAMP).toString()));
+        }
 
         // Setup project name
         if (additionalProperties.containsKey(PROJECT_NAME)) {
@@ -184,12 +197,19 @@ public class SwiftCodegen extends DefaultCodegen implements CodegenConfig {
         if (ArrayUtils.contains(responseAs, LIBRARY_PROMISE_KIT)) {
             additionalProperties.put("usePromiseKit", true);
         }
+        if (ArrayUtils.contains(responseAs, LIBRARY_RX_SWIFT)) {
+            additionalProperties.put("useRxSwift", true);
+        }
 
         // Setup swiftUseApiNamespace option, which makes all the API classes inner-class of {{projectName}}API
         if (additionalProperties.containsKey(SWIFT_USE_API_NAMESPACE)) {
             swiftUseApiNamespace = Boolean.parseBoolean(String.valueOf(additionalProperties.get(SWIFT_USE_API_NAMESPACE)));
         }
         additionalProperties.put(SWIFT_USE_API_NAMESPACE, swiftUseApiNamespace);
+
+        if (!additionalProperties.containsKey(POD_AUTHORS)) {
+            additionalProperties.put(POD_AUTHORS, DEFAULT_POD_AUTHORS);
+        }
 
         supportingFiles.add(new SupportingFile("Podspec.mustache", "", projectName + ".podspec"));
         supportingFiles.add(new SupportingFile("Cartfile.mustache", "", "Cartfile"));
@@ -249,6 +269,11 @@ public class SwiftCodegen extends DefaultCodegen implements CodegenConfig {
         } else
             type = swaggerType;
         return toModelName(type);
+    }
+
+    @Override
+    public boolean isDataTypeBinary(final String dataType) {
+      return dataType != null && dataType.equals("NSData");
     }
 
     /**
@@ -325,13 +350,21 @@ public class SwiftCodegen extends DefaultCodegen implements CodegenConfig {
     @Override
     public CodegenProperty fromProperty(String name, Property p) {
         CodegenProperty codegenProperty = super.fromProperty(name, p);
+        // TODO skip array/map of enum for the time being,
+        // we need to add logic here to handle array/map of enum for any
+        // dimensions
+        if (Boolean.TRUE.equals(codegenProperty.isContainer)) {
+            return codegenProperty;
+        }
+
         if (codegenProperty.isEnum) {
             List<Map<String, String>> swiftEnums = new ArrayList<Map<String, String>>();
             List<String> values = (List<String>) codegenProperty.allowableValues.get("values");
-            for (String value : values) {
+            
+            for (Object value : values) {
                 Map<String, String> map = new HashMap<String, String>();
-                map.put("enum", toSwiftyEnumName(value));
-                map.put("raw", value);
+                map.put("enum", toSwiftyEnumName(String.valueOf(value)));
+                map.put("raw", String.valueOf(value));
                 swiftEnums.add(map);
             }
             codegenProperty.allowableValues.put("values", swiftEnums);
@@ -505,7 +538,7 @@ public class SwiftCodegen extends DefaultCodegen implements CodegenConfig {
         // TODO: this code is probably useless, because the var name is computed from the value in map.put("enum", toSwiftyEnumName(value));
         // number
         if ("int".equals(datatype) || "double".equals(datatype) || "float".equals(datatype)) {
-            String varName = new String(name);
+            String varName = name;
             varName = varName.replaceAll("-", "MINUS_");
             varName = varName.replaceAll("\\+", "PLUS_");
             varName = varName.replaceAll("\\.", "_DOT_");
@@ -540,6 +573,17 @@ public class SwiftCodegen extends DefaultCodegen implements CodegenConfig {
     public Map<String, Object> postProcessModels(Map<String, Object> objs) {
         // process enum in models
         return postProcessModelsEnum(objs);
+    }
+
+    @Override
+    public String escapeQuotationMark(String input) {
+        // remove " to avoid code injection
+        return input.replace("\"", "");
+    }
+
+    @Override
+    public String escapeUnsafeCharacters(String input) {
+        return input.replace("*/", "*_/").replace("/*", "/_*");
     }
 
 }

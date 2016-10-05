@@ -112,7 +112,7 @@ public class StoreAPI: APIBase {
   "petId" : 123456789,
   "quantity" : 123,
   "id" : 123456789,
-  "shipDate" : "2000-01-23T04:56:07.000+0000",
+  "shipDate" : "2000-01-23T04:56:07.000+00:00",
   "complete" : true,
   "status" : "aeiou"
 }}, {contentType=application/xml, example=<Order>
@@ -127,7 +127,7 @@ public class StoreAPI: APIBase {
   "petId" : 123456789,
   "quantity" : 123,
   "id" : 123456789,
-  "shipDate" : "2000-01-23T04:56:07.000+0000",
+  "shipDate" : "2000-01-23T04:56:07.000+00:00",
   "complete" : true,
   "status" : "aeiou"
 }}, {contentType=application/xml, example=<Order>
@@ -180,7 +180,7 @@ public class StoreAPI: APIBase {
   "petId" : 123456789,
   "quantity" : 123,
   "id" : 123456789,
-  "shipDate" : "2000-01-23T04:56:07.000+0000",
+  "shipDate" : "2000-01-23T04:56:07.000+00:00",
   "complete" : true,
   "status" : "aeiou"
 }}, {contentType=application/xml, example=<Order>
@@ -195,7 +195,7 @@ public class StoreAPI: APIBase {
   "petId" : 123456789,
   "quantity" : 123,
   "id" : 123456789,
-  "shipDate" : "2000-01-23T04:56:07.000+0000",
+  "shipDate" : "2000-01-23T04:56:07.000+00:00",
   "complete" : true,
   "status" : "aeiou"
 }}, {contentType=application/xml, example=<Order>

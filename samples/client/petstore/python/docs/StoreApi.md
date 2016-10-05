@@ -1,4 +1,4 @@
-# swagger_client.StoreApi
+# petstore_api.StoreApi
 
 All URIs are relative to *http://petstore.swagger.io/v2*
 
@@ -19,20 +19,21 @@ For valid response try integer IDs with value < 1000. Anything above 1000 or non
 
 ### Example 
 ```python
+from __future__ import print_statement
 import time
-import swagger_client
-from swagger_client.rest import ApiException
+import petstore_api
+from petstore_api.rest import ApiException
 from pprint import pprint
 
 # create an instance of the API class
-api_instance = swagger_client.StoreApi()
+api_instance = petstore_api.StoreApi()
 order_id = 'order_id_example' # str | ID of the order that needs to be deleted
 
 try: 
     # Delete purchase order by ID
     api_instance.delete_order(order_id)
 except ApiException as e:
-    print "Exception when calling StoreApi->delete_order: %s\n" % e
+    print("Exception when calling StoreApi->delete_order: %s\n" % e)
 ```
 
 ### Parameters
@@ -65,25 +66,26 @@ Returns a map of status codes to quantities
 
 ### Example 
 ```python
+from __future__ import print_statement
 import time
-import swagger_client
-from swagger_client.rest import ApiException
+import petstore_api
+from petstore_api.rest import ApiException
 from pprint import pprint
 
 # Configure API key authorization: api_key
-swagger_client.configuration.api_key['api_key'] = 'YOUR_API_KEY'
+petstore_api.configuration.api_key['api_key'] = 'YOUR_API_KEY'
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# swagger_client.configuration.api_key_prefix['api_key'] = 'Bearer'
+# petstore_api.configuration.api_key_prefix['api_key'] = 'Bearer'
 
 # create an instance of the API class
-api_instance = swagger_client.StoreApi()
+api_instance = petstore_api.StoreApi()
 
 try: 
     # Returns pet inventories by status
     api_response = api_instance.get_inventory()
     pprint(api_response)
 except ApiException as e:
-    print "Exception when calling StoreApi->get_inventory: %s\n" % e
+    print("Exception when calling StoreApi->get_inventory: %s\n" % e)
 ```
 
 ### Parameters
@@ -113,13 +115,14 @@ For valid response try integer IDs with value <= 5 or > 10. Other values will ge
 
 ### Example 
 ```python
+from __future__ import print_statement
 import time
-import swagger_client
-from swagger_client.rest import ApiException
+import petstore_api
+from petstore_api.rest import ApiException
 from pprint import pprint
 
 # create an instance of the API class
-api_instance = swagger_client.StoreApi()
+api_instance = petstore_api.StoreApi()
 order_id = 789 # int | ID of pet that needs to be fetched
 
 try: 
@@ -127,7 +130,7 @@ try:
     api_response = api_instance.get_order_by_id(order_id)
     pprint(api_response)
 except ApiException as e:
-    print "Exception when calling StoreApi->get_order_by_id: %s\n" % e
+    print("Exception when calling StoreApi->get_order_by_id: %s\n" % e)
 ```
 
 ### Parameters
@@ -160,21 +163,22 @@ Place an order for a pet
 
 ### Example 
 ```python
+from __future__ import print_statement
 import time
-import swagger_client
-from swagger_client.rest import ApiException
+import petstore_api
+from petstore_api.rest import ApiException
 from pprint import pprint
 
 # create an instance of the API class
-api_instance = swagger_client.StoreApi()
-body = swagger_client.Order() # Order | order placed for purchasing the pet
+api_instance = petstore_api.StoreApi()
+body = petstore_api.Order() # Order | order placed for purchasing the pet
 
 try: 
     # Place an order for a pet
     api_response = api_instance.place_order(body)
     pprint(api_response)
 except ApiException as e:
-    print "Exception when calling StoreApi->place_order: %s\n" % e
+    print("Exception when calling StoreApi->place_order: %s\n" % e)
 ```
 
 ### Parameters

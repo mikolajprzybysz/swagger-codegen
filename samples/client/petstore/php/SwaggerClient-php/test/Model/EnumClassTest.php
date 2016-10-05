@@ -7,7 +7,7 @@
  * @category Class
  * @package  Swagger\Client
  * @author   http://github.com/swagger-api/swagger-codegen
- * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
+ * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  * @link     https://github.com/swagger-api/swagger-codegen
  */
 /**
@@ -40,7 +40,7 @@ namespace Swagger\Client\Model;
  * @description EnumClass
  * @package     Swagger\Client
  * @author      http://github.com/swagger-api/swagger-codegen
- * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache Licene v2
+ * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  * @link        https://github.com/swagger-api/swagger-codegen
  */
 class EnumClassTest extends \PHPUnit_Framework_TestCase
@@ -67,8 +67,8 @@ class EnumClassTest extends \PHPUnit_Framework_TestCase
      */
     public function testEnumClass()
     {
-        $this->assertSame(Swagger\Client\Model\EnumClass::ABC, "_abc");
-        $this->assertSame(Swagger\Client\Model\EnumClass::EFG, "-efg");
-        $this->assertSame(Swagger\Client\Model\EnumClass::XYZ, "(xyz)");
+        $this->assertSame(EnumClass::ABC, "_abc");
+        $this->assertSame(EnumClass::EFG, "-efg");
+        $this->assertSame(EnumClass::XYZ, "(xyz)");
     }
 }

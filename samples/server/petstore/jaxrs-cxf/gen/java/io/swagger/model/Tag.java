@@ -1,7 +1,6 @@
 package io.swagger.model;
 
-
-
+import io.swagger.annotations.ApiModel;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -19,8 +18,10 @@ import javax.xml.bind.annotation.XmlEnum;
 public class Tag  {
   
 
+  @XmlElement(name="id")
   private Long id = null;
 
+  @XmlElement(name="name")
   private String name = null;
 
   /**
